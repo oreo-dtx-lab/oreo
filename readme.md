@@ -1,5 +1,7 @@
 # Oreo: High-Performance and Scalable Transactions across Heterogeneous NoSQL Data Stores
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/oreo-dtx-lab/oreo)](https://goreportcard.com/report/github.com/oreo-dtx-lab/oreo)
+[![Go Reference](https://pkg.go.dev/badge/github.com/oreo-dtx-lab/oreo.svg)](https://pkg.go.dev/github.com/oreo-dtx-lab/oreo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
@@ -31,7 +33,7 @@ This repository is dedicated to sharing the implementation of Oreo for the ASPLO
 + `./internal`: Internal classes
 + `./pkg`: All code related to Oreo
 
-
+Documentation can be found [here](https://pkg.go.dev/github.com/oreo-dtx-lab/oreo).
 
 
 ## Evaluation
