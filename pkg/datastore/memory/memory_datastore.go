@@ -406,6 +406,11 @@ func (m *MemoryDatastore) Abort(hasCommitted bool) error {
 	return nil
 }
 
+func (m *MemoryDatastore) OnePhaseCommit() error {
+	// TODO: implement me
+	return nil
+}
+
 func (m *MemoryDatastore) Recover(key string) {
 	//TODO implement me
 	panic("implement me")

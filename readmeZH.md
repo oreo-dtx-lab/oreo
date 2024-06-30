@@ -7,8 +7,6 @@
 
 ![Logo](./assets/img/logo.png)
 </div>
-
-
 ## Oreo
 
 Oreo: High-Performance and Scalable Transactions across Heterogeneous NoSQL Data Stores
@@ -25,11 +23,12 @@ This repository is dedicated to sharing the implementation of Oreo for the ASPLO
 
 ## Project Structure
 
-+ `./benchmarks`: All code related to benchmark testing
-+ `./executor`: Code for the Stateless Executor
-+ `./integration`:  Code for integration tests
-+ `./internal`: Internal classes
-+ `./pkg`: All code related to Oreo
++ `./benchmarks`：所有关于 Benchmark 测试的代码
++ `./executor`：Stateless Executor 的代码
++ `./integration`：集成测试的代码
++ `./internal`：一些自己使用的内部类
++ `./pkg`：所有关于 Oreo 的代码
+
 
 
 
@@ -38,9 +37,9 @@ This repository is dedicated to sharing the implementation of Oreo for the ASPLO
 
 ### Command Line Parameters
 
-Below are descriptions of all command parameters for the benchmark application.
+下面给出 benchmark 应用程序中所有命令参数的说明
 
-You can switch to the `./benchmarks/cmd` directory and generate the corresponding binary file using `go build .`, or compile and run it directly using `go run .`.
+你可以切换到`./benchmarks/cmd`路径下， 通过 `go build .` 生成对应的二进制文件，或者通过 `go run .` 直接编译运行
 
 ```bash
 Usage of ./benchmarks/cmd:
@@ -66,66 +65,77 @@ Usage of ./benchmarks/cmd:
         Workload type
 ```
 
-Below are detailed descriptions for each option.
+下面是对每个选项的详细说明
 
-`-d`: Required parameter to select the database type for the current test. The available types are:
+`-d`：必要参数，选取本次测试中运行的数据库类型，可选的类型有：
 
-+ `redis`: Native Redis data operations
-  + Suitable workload: `ycsb`
-  + Database address: `RedisDBAddr`
-+ `oreo-redis`: Redis data operations under the Oreo framework, supporting distributed ACID transactions
-  + Suitable workload: `ycsb`
-  + Database address: `OreoRedisAddr`
-+ `mongo`: Native MongoDB data operations
-  + Suitable workload: `ycsb`
-  + Database address: `MongoDBAddr1`
-+ `oreo-mongo`: MongoDB data operations under the Oreo framework, supporting distributed ACID transactions
-  + Suitable workload: `ycsb`
-  + Database address: `OreoMongoDBAddr1`
-+ `native-rm`: Native data operations with a Redis-MongoDB combination
-  + Suitable workload: `multi-ycsb`
-  + Database addresses: `RedisDBAddr` and `MongoDBAddr1`
-+ `native-mm`: Native data operations with a MongoDB-MongoDB combination
-  + Suitable workload: `multi-ycsb`
-  + Database addresses: `MongoDBAddr1` and `MongoDBAddr2`
-+ `oreo-rm`: Supporting distributed ACID transactions with a Redis-MongoDB combination
-  + Suitable workload: `multi-ycsb`
-  + Database addresses: `OreoRedisAddr` and `OreoMongoDBAddr1`
-+ `oreo-mm`: Supporting distributed ACID transactions with a MongoDB-MongoDB combination
-  + Suitable workload: `multi-ycsb`
-  + Database addresses: `OreoMongoDBAddr1` and `OreoMongoDBAddr2`
++ `redis`：原生的 Redis 数据操作
+  + 适配的工作负载为 `ycsb`
+  + 使用的数据库地址为 `RedisDBAddr`
++ `oreo-redis`：Oreo 框架下的 Redis 数据操作，支持分布式 ACID 事务
+  + 适配的工作负载为 `ycsb`
+  + 使用的数据库地址为 `OreoRedisAddr`
++ `mongo`：原生的 MongoDB 数据操作
+  + 适配的工作负载为 `ycsb`
+  + 使用的数据库地址为 `MongoDBAddr1`
++ `oreo-mongo`：Oreo 框架下的 MongoDB 数据操作，支持分布式 ACID 事务
+  + 适配的工作负载为 `ycsb`
+  + 使用的数据库地址为 `OreoMongoDBAddr1`
++ `native-rm`：原生的数据操作，数据库组合为 Redis-MongoDB
+  + 适配的工作负载为 `multi-ycsb`
+  + 使用的数据库地址为 `RedisDBAddr` 和 `MongoDBAddr1`
++ `native-mm`：原生的数据操作，数据库组合为 MongoDB-MongoDB
+  + 适配的工作负载为 `multi-ycsb`
+  + 使用的数据库地址为 `MongoDBAddr1` 和 `MongoDBAddr2`
 
-
-
-`-m`: Required parameter to set the mode of execution, which can be `load` or `run`.
-
-+ `load`: Loads the corresponding data for the specified database type.
-+ `run`: Starts the performance benchmark test.
-
-`-ps`: Optional parameter, default is empty, sets the preset parameters, which can be found in `main.go`.
-
-+ `cg`: Parameters for the Cherry Garcia protocol. If you want to test Cherry Garcia, please specify this option.
-+ `native`: Parameters for native data operations.
-
-`-read`: Optional parameter, default is `p`, sets the transaction read strategy under the Oreo framework.
-
-+ `p`: Uses the pessimistic read strategy.
-+ `ac`: Uses the Assume-Committed strategy.
-+ `aa`: Uses the Assume-Aborted strategy.
++ `oreo-rm`：支持分布式 ACID 事务，数据库组合为 Redis-MongoDB
+  + 适配的工作负载为 `multi-ycsb`
+  + 使用的数据库地址为 ` OreoRedisAddr` 和 `OreoMongoDBAddr1`
++ `oreo-mm`：支持分布式 ACID 事务，数据库组合为 MongoDB-MongoDB
+  + 适配的工作负载为 `multi-ycsb`
+  + 使用的数据库地址为 ` OreoMongoDBAddr1` 和 `OreoMongoDBAddr2`
 
 
 
-`-remote`: Specifies whether to use a Stateless Executor for data operations. The Executor's address can be configured in `./benchmarks/pkg/config/config.go`.
+`-m` ：必要参数，设定本次执行的模式，可以为 `load` 或者 `run`
 
-`-t`: Required parameter, sets the number of threads for the test.
-
-`-trace`: Specifies whether to enable Go's built-in trace analysis.
-
-`-wc`: Required parameter, sets the workload configuration path for the test.
++ `load` 指令给对应的数据库类型加载对应数据
++ `run` 指令开启性能基准测试
 
 
 
-Below are some command line examples:
+`-ps`：可选参数，默认值为空，设置预定的参数，具体的参数可以在 `main.go` 中查看
+
++ `cg`：Cherry Garcia 协议对应的参数，如果想要测试 Cherry Garcia，请务必指定此选项
++ `native`：原生数据操作对应的参数
+
+
+
+`-read`：可选参数，默认值为 `p`，设定 Oreo 框架下事务读的策略
+
++ `p`：采用悲观读的策略
++ `ac`：采用 Assume-Committed 的策略
++ `aa`：采用 Assume-Aborted 的策略
+
+
+
+`-remote`：是否使用 Stateless Executor 进行数据操作，Executor 的地址可以在 `./benchmarks/pkg/config` 中配置
+
+
+
+`-t`：必要参数，本次测试采用的线程数
+
+
+
+`-trace`：是否启用 Golang 自带的 trace 分析
+
+
+
+`-wc`：必要参数，本次测试的工作负载配置路径
+
+
+
+下面提供了几个命令行的示例：
 
 ```bash
 # Load data to redis using 100 threads
@@ -143,44 +153,41 @@ go run . -d oreo-mm -wl multi-ycsb -wc ./workloads/workloada -m run -ps cg -t 12
 
 ### Getting Started
 
-This section will introduce how to run a benchmark from scratch.
+本节将介绍如何从零开始运行一个 Benchmark。
 
-1. **Clone the Repository**: 
-
-    First, clone the entire repository.
+第一步，我们需要将整个仓库克隆下来
 
 ```bash
 git clone git@github.com:oreo-dtx-lab/oreo.git
 ```
 
-2. **Modify Relevant Configurations**:
-   - Database addresses, usernames, and passwords are located in `./benchmarks/cmd/main.go`.
-   - Stateless Executor addresses are located in `./benchmarks/pkg/config/config.go`.
+第二步，修改相关的配置
 
-3. **Compile the Stateless Executor**:
-   Compile the Stateless Executor.
+1. 数据库地址，用户名以及密码，位于 `./benchmarks/cmd/main.go` 中
+2. Stateless Executor 地址，位于 `./benchmarks/pkg/config/config.go` 中
+
+第三步，编译 Stateless Executor
 
 ```bash
 cd ./executor
 go build .
 ```
 
-4. **Deploy and Run the Executor**:
-   Distribute the Executor to the database nodes and run it.
+第四步，将 Executor 分发到数据库节点上并运行
 
-> The Executor also has a few simple command line parameters:
-
-> + `-p`: Sets the HTTP server port.
-> + `-r1`: Specifies the address of the `redis1` database.
-> + `-m1`: Specifies the address of the `mongo1` database.
-> + `-m2`: Specifies the address of the `mongo2` database.
+> Executor 也有几个简单的命令行参数：
+>
+> + `-p`：设置 HTTP 服务器的端口
+> + `-r1`：指定 `redis1` 数据库的地址
+> + `-m1`：指定 `mongo1` 数据库的地址
+> + `-m2`：指定 `mongo2` 数据库的地址
 
 ```bash
 ./executor -m1 mongodb://localhost:27017 -m2 mongodb://localhost:27018
 ```
 
-5. **Select and Check Workload Configuration**:
-   Determine the workload you want to run and check its configuration. Workload configuration files are located in `./benchmarks/cmd/workloads` and are written in YAML format. Below is a template of a workload configuration.
+第五步，确定自己要运行的工作负载，检查其配置，工作负载的配置文件在 `./benchmarks/cmd/workloads` 路径下，采用 yaml 格式编写，下面是一份工作负载的模版
+
 ```yaml
 # Total number of records to be generated
 recordcount: 1000000
@@ -205,10 +212,9 @@ mongo2proportion: 0 # Proportion of operations on MongoDB instance 2
 couchdbproportion: 0 # Proportion of operations on CouchDB
 ```
 
-6. **Load Data into the Database**:
-   Load data into the database. Note that different types of databases have different addresses.
+第六步，向数据库中加载数据，注意不同类型的数据库对应的地址是不一样的
 
-> Note: Database combinations such as `oreo-mm`, `oreo-rm`, `native-mm`, and `native-rm` do not support direct data loading. Please run separate load commands for each database independently. For example, for `oreo-rm`, run:
+> 注意，数据库组合类型如 `oreo-mm`，`oreo-rm`，`native-mm`，`native-rm` 不支持直接加载数据，请手动分为两个数据库独立运行加载指令，如 `oreo-rm` 请运行
 >
 > ```bash
 > # Load data to redis
@@ -226,8 +232,7 @@ go run . -d redis -wl ycsb -wc ./workloads/workloada.yaml -m load -t 100
 go run . -d oreo-redis -wl ycsb -wc ./workloads/workloada.yaml -m load -t 100
 ```
 
-7. **Run the Benchmark**:
-   Execute the benchmark. Below are some examples for reference.
+第七步，运行 Benchmark，下面提供了一些例子以供参考
 
 ```bash
 # Running with native-rm under workload A
@@ -240,8 +245,7 @@ go run . -d oreo-mm -wl multi-ycsb -wc ./workloads/workloada.yaml -m run -ps cg 
 go run . -d oreo-redis -wl ycsb -wc ./workloads/purewrite.yaml -m run -remote -read aa -t 128
 ```
 
-8. **Wait for Benchmark Completion**:
-   Once the benchmark completes, you should see output similar to the following:
+第八步，等待 Benchmark 完成，你应该会得到类似于下面的输出：
 
 ```bash
 -----------------
@@ -298,22 +302,28 @@ rollback failed
   version mismatch  507
 ```
 
-The test output is mainly divided into three sections:
+测试的输出主要分为三个部分：
 
-+ **Configuration Information**
-  + Details of the test configuration.
++ 本次测试的配置信息
 
-+ **Performance Metrics**
-  + This section provides the timing data for each operation during the test, including the average, maximum, minimum, 50th percentile, 95th percentile, 99th percentile, 99.9th percentile, and 99.99th percentile values.
++ 性能测量信息
+  + 这部分统计了测试中每个操作的用时数据，包括平均值/最大值/最小值/50分位/95分位/99分位/99.9分位/99.99分位的数据
 
-+ **Error Log Information**
-  + This section records the number and reasons for all transaction operation errors during the test.
++ 错误记录信息
+  + 这部分统计了本次测试中所有事务操作出错的次数和原因
+
 
 
 ### Note
 
-+ If you need to test Cherry Garcia, please use the `-ps cg` parameter.
-+ The default simulated latency is 3ms. If you need to adjust the simulated latency, please modify the value in `./benchmark/pkg/config/config.go`.
++ 如果需要测试 Cherry Garcia，请使用 `-ps cg` 参数
++ 程序默认的模拟延迟为 3ms，如果你需要调整模拟延迟，请修改 `./benchmark/pkg/config/config.go` 中的数值
+
+
+
+
+
+
 
 
 

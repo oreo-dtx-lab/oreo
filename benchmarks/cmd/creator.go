@@ -24,7 +24,7 @@ import (
 func RedisCreator(addr string) (ycsb.DBCreator, error) {
 	rdb1 := goredis.NewClient(&goredis.Options{
 		Addr:     addr,
-		Password: "@ljy123456",
+		Password: RedisPassword,
 	})
 
 	// try to warm up the connection
@@ -44,8 +44,8 @@ func RedisCreator(addr string) (ycsb.DBCreator, error) {
 func MongoCreator(addr string) (ycsb.DBCreator, error) {
 	clientOptions := options.Client().ApplyURI(addr)
 	clientOptions.SetAuth(options.Credential{
-		Username: "admin",
-		Password: "admin",
+		Username: MongoUsername,
+		Password: MongoPassword,
 	})
 	context1, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -106,7 +106,7 @@ func NativeCreator(pattern string) (ycsb.DBCreator, error) {
 func OreoRedisCreator(isRemote bool) (ycsb.DBCreator, error) {
 	redisConn1 := redisCo.NewRedisConnection(&redisCo.ConnectionOptions{
 		Address:  OreoRedisAddr,
-		Password: "@ljy123456",
+		Password: RedisPassword,
 		PoolSize: 100,
 	})
 
@@ -133,15 +133,15 @@ func OreoMongoCreator(isRemote bool) (ycsb.DBCreator, error) {
 		Address:        OreoMongoDBAddr1,
 		DBName:         "oreo",
 		CollectionName: "benchmark",
-		Username:       "admin",
-		Password:       "admin",
+		Username:       MongoUsername,
+		Password:       MongoPassword,
 	})
 	mongoConn2 := mongoCo.NewMongoConnection(&mongoCo.ConnectionOptions{
 		Address:        OreoMongoDBAddr1,
 		DBName:         "oreo",
 		CollectionName: "benchmark",
-		Username:       "admin",
-		Password:       "admin",
+		Username:       MongoUsername,
+		Password:       MongoPassword,
 	})
 
 	mongoConn1.Connect()
@@ -168,8 +168,8 @@ func OreoCouchCreator(isRemote bool) (ycsb.DBCreator, error) {
 	couchConn1 := couchdb.NewCouchDBConnection(&couchdb.ConnectionOptions{
 		Address:  OreoCouchDBAddr,
 		DBName:   "oreo",
-		Username: "admin",
-		Password: "password",
+		Username: CouchUsername,
+		Password: CouchPassword,
 	})
 	couchConn1.Connect()
 
@@ -197,15 +197,15 @@ func OreoCreator(pattern string, isRemote bool) (ycsb.DBCreator, error) {
 			Address:        OreoMongoDBAddr1,
 			DBName:         "oreo",
 			CollectionName: "benchmark",
-			Username:       "admin",
-			Password:       "admin",
+			Username:       MongoUsername,
+			Password:       MongoPassword,
 		})
 		mongoConn2 := mongoCo.NewMongoConnection(&mongoCo.ConnectionOptions{
 			Address:        OreoMongoDBAddr2,
 			DBName:         "oreo",
 			CollectionName: "benchmark",
-			Username:       "admin",
-			Password:       "admin",
+			Username:       MongoUsername,
+			Password:       MongoPassword,
 		})
 		mongoConn1.Connect()
 		mongoConn2.Connect()
@@ -236,15 +236,15 @@ func OreoCreator(pattern string, isRemote bool) (ycsb.DBCreator, error) {
 	if pattern == "rm" {
 		redisConn1 := redisCo.NewRedisConnection(&redisCo.ConnectionOptions{
 			Address:  OreoRedisAddr,
-			Password: "@ljy123456",
+			Password: RedisPassword,
 		})
 
 		mongoConn1 := mongoCo.NewMongoConnection(&mongoCo.ConnectionOptions{
 			Address:        OreoMongoDBAddr1,
 			DBName:         "oreo",
 			CollectionName: "benchmark",
-			Username:       "admin",
-			Password:       "admin",
+			Username:       MongoUsername,
+			Password:       MongoPassword,
 		})
 		redisConn1.Connect()
 		mongoConn1.Connect()

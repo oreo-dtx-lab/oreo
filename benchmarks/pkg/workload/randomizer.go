@@ -30,7 +30,7 @@ func NewRandomizer(wp *WorkloadParameter) *Randomizer {
 	var keyrangeLowerBound int64 = insertStart
 	var keyrangeUpperBound int64 = insertStart + insertCount - 1
 
-	fmt.Println("Start NewRandomizer")
+	// fmt.Println("Start NewRandomizer")
 	r := &Randomizer{
 		mu:               sync.Mutex{},
 		r:                rand.New(rand.NewSource(time.Now().UnixNano())),
@@ -42,7 +42,7 @@ func NewRandomizer(wp *WorkloadParameter) *Randomizer {
 			keyrangeUpperBound,
 			config.ZipfianConstant),
 	}
-	fmt.Println("NewRandomizer")
+	// fmt.Println("NewRandomizer")
 	return r
 }
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/oreo-dtx-lab/oreo/pkg/generator"
 	"github.com/oreo-dtx-lab/oreo/pkg/serializer"
 	"go.uber.org/zap/zapcore"
 )
@@ -72,7 +73,7 @@ type config struct {
 	MaxRecordLength int
 
 	// IdGenerator generates unique IDs for records.
-	IdGenerator IdGenerator
+	IdGenerator generator.IdGenerator
 
 	// Serializer serializes and deserializes records.
 	Serializer serializer.Serializer
@@ -96,7 +97,7 @@ type config struct {
 var Config = config{
 	LeaseTime:                   1000 * time.Millisecond,
 	MaxRecordLength:             2,
-	IdGenerator:                 NewUUIDGenerator(),
+	IdGenerator:                 generator.NewUUIDGenerator(),
 	Serializer:                  serializer.NewJSONSerializer(),
 	LogLevel:                    zapcore.InfoLevel,
 	ConcurrentOptimizationLevel: DEFAULT,

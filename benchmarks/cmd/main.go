@@ -21,14 +21,19 @@ import (
 )
 
 const (
+	RedisPassword = "password"
 	RedisDBAddr   = "localhost:6379"
 	OreoRedisAddr = "localhost:6380"
 
+	MongoUsername    = "admin"
+	MongoPassword    = "admin"
 	MongoDBAddr1     = "mongodb://localhost:27017"
 	MongoDBAddr2     = "mongodb://localhost:27017"
 	OreoMongoDBAddr1 = "mongodb://localhost:27018"
 	OreoMongoDBAddr2 = "mongodb://localhost:27018"
 
+	CouchUsername   = "admin"
+	CouchPassword   = "password"
 	OreoCouchDBAddr = "http://admin:password@localhost:5984"
 )
 
@@ -61,7 +66,7 @@ func main() {
 	wp := &workload.WorkloadParameter{
 		RecordCount:               10000,
 		OperationCount:            10000,
-		TxnOperationGroup:         6,
+		TxnOperationGroup:         4,
 		ReadProportion:            0.5,
 		UpdateProportion:          0,
 		InsertProportion:          0,
@@ -95,18 +100,18 @@ func main() {
 		cfg.Config.ReadStrategy = cfg.Pessimistic
 		cfg.Debug.CherryGarciaMode = true
 		cfg.Debug.DebugMode = true
-		cfg.Debug.ConnAdditionalLatency = 3 * time.Millisecond
+		cfg.Debug.ConnAdditionalLatency = config.Latency
 		cfg.Config.ConcurrentOptimizationLevel = 0
 		cfg.Config.AsyncLevel = 2
 	case "native":
 		fmt.Printf("Running under Native Mode\n")
 		cfg.Debug.DebugMode = true
-		cfg.Debug.ConnAdditionalLatency = 3 * time.Millisecond
+		cfg.Debug.ConnAdditionalLatency = config.Latency
 	default:
 		fmt.Printf("No preset configuration\n")
 		cfg.Config.ReadStrategy = cfg.Pessimistic
 		cfg.Debug.DebugMode = true
-		cfg.Debug.HTTPAdditionalLatency = 3 * time.Millisecond
+		cfg.Debug.HTTPAdditionalLatency = config.Latency
 		cfg.Debug.ConnAdditionalLatency = 0 * time.Millisecond
 		cfg.Config.ConcurrentOptimizationLevel = 2
 		cfg.Config.AsyncLevel = 2
@@ -142,6 +147,11 @@ func main() {
 		cfg.Config.ConcurrentOptimizationLevel = 1
 		cfg.Debug.DebugMode = false
 		wp.DoBenchmark = false
+		if workloadType == "multi-ycsb" {
+			fmt.Printf("Not support load mode for multi-ycsb\n")
+			return
+		}
+
 		fmt.Println("Start to load data")
 		client.RunLoad()
 		fmt.Println("Load finished")

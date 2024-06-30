@@ -62,9 +62,13 @@ type Transaction struct {
 	// isReadOnly indicates whether the transaction is read-only.
 	isReadOnly bool
 
+	// writeCount is the number of write operations performed by the transaction.
+	writeCount int
+
 	// client is the network client used by the transaction.
 	client RemoteClient
 
+	// isRemote indicates whether the transaction is remote.
 	isRemote bool
 
 	*StateMachine
@@ -184,6 +188,7 @@ func (t *Transaction) Write(dsName string, key string, value any) error {
 		return err
 	}
 	t.isReadOnly = false
+	t.writeCount++
 	// msgStr := fmt.Sprintf("write in %v: [Key: %v]", dsName, key)
 	// Log.Debugw(msgStr, "txnId", t.TxnId, "topic", testutil.DWrite)
 	// t.debug(testutil.DWrite, "write in %v: [Key: %v]", dsName, key)
@@ -228,11 +233,22 @@ func (t *Transaction) Commit() error {
 		return err
 	}
 
+	// Two special cases
+
+	// Case 1: If the transaction is read-only,
+	// we can skip the prepare and commit phases.
 	if t.isReadOnly {
 		Log.Infow("transaction is read-only, Commit() complete", "txnId", t.TxnId)
 		return nil
 	}
 
+	// Case 2: If the write count is 1,
+	// we can do one phase commit
+	if t.writeCount == 1 {
+		return t.OnePhaseCommit()
+	}
+
+	// Or, we go through the normal process
 	// ------------------- Prepare phase ----------------------------
 	t.TxnCommitTime, err = t.getTime()
 	if err != nil {
@@ -351,6 +367,18 @@ func (t *Transaction) Commit() error {
 	Log.Infow("Deleting TSR", "txnId", t.TxnId)
 	t.DeleteTSR()
 	Log.Infow("Successfully Commit()", "txnId", t.TxnId)
+	return nil
+}
+
+func (t *Transaction) OnePhaseCommit() error {
+	for _, ds := range t.dataStoreMap {
+		err := ds.OnePhaseCommit()
+		if err != nil {
+			Log.Errorw("one phase commit failed", "txnId", t.TxnId, "ds", ds.GetName(), "cause", err)
+			go t.Abort()
+			return err
+		}
+	}
 	return nil
 }
 

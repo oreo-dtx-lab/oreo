@@ -531,6 +531,11 @@ func (_c *MockDatastore_Write_Call) RunAndReturn(run func(string, interface{}) e
 	return _c
 }
 
+func (_m *MockDatastore) OnePhaseCommit() error {
+	ret := _m.Called()
+	return ret.Error(0)
+}
+
 func (_m *MockDatastore) ReadTSR(txnId string) (config.State, error) {
 	var r0 config.State
 	ret := _m.Called(txnId)

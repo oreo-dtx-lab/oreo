@@ -8,8 +8,8 @@ operationcount: 100000
 txnoperationgroup: 6
 
 # Proportions of different operations
-readproportion: 0.5 # Proportion of read operations
-updateproportion: 0.5 # Proportion of update operations
+readproportion: 0 # Proportion of read operations
+updateproportion: 1.0 # Proportion of update operations
 insertproportion: 0 # Proportion of insert operations
 scanproportion: 0 # Proportion of scan operations
 readmodifywriteproportion: 0 # Proportion of read-modify-write operations

@@ -28,7 +28,7 @@ type WorkloadParameter struct {
 	// These parameters are for the data distribution test
 	GlobalDatastoreName string  `yaml:"globaldatastorename"`
 	Redis1Proportion    float64 `yaml:"redis1proportion"`
-	Mongo1Proportion    float64 `yaml:"mongo2proportion"`
+	Mongo1Proportion    float64 `yaml:"mongo1proportion"`
 	Mongo2Proportion    float64 `yaml:"mongo2proportion"`
 	CouchDBProportion   float64 `yaml:"couchdbproportion"`
 }

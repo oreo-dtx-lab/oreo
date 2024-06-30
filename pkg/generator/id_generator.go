@@ -1,4 +1,4 @@
-package config
+package generator
 
 type IdGenerator interface {
 	GenerateId() string

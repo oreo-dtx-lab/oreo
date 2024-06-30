@@ -805,6 +805,17 @@ func (r *Datastore) Abort(hasCommitted bool) error {
 	return nil
 }
 
+func (r *Datastore) OnePhaseCommit() error {
+	if len(r.writeCache) == 0 {
+		return nil
+	}
+	// there is only one record in the writeCache
+	for _, item := range r.writeCache {
+		return r.conditionalUpdate(item)
+	}
+	return nil
+}
+
 // rollback overwrites the record with the application data
 // and metadata that found in field Prev.
 // if the `Prev` is empty, it simply deletes the record

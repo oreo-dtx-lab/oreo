@@ -1,4 +1,4 @@
-package config
+package generator
 
 import "github.com/google/uuid"
 
